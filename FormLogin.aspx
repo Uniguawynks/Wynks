@@ -26,7 +26,7 @@
                                             <label class="label" style="color: black">
                                                 Usuário
                                             </label>
-                                            <asp:TextBox runat="server" ID="usuario" CssClass="form-control" placeholder="Digite seu usuario aqui"></asp:TextBox>
+                                            <asp:TextBox runat="server" ID="tbUsuario" CssClass="form-control" placeholder="Digite seu usuario aqui"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -34,13 +34,13 @@
                                             <label class="label" style="color:black">
                                                 Senha
                                             </label>
-                                            <asp:TextBox runat="server" ID="senha" CssClass="form-control" placeholder="Digite sua senha" TextMode="Password"></asp:TextBox>
+                                            <asp:TextBox runat="server" ID="tbSenha" CssClass="form-control" placeholder="Digite sua senha" TextMode="Password"></asp:TextBox>
                                         </div>
                                     </div>
                                     <br />
                                     <div class="row">
                                         <div class="col-md-12 text-center">
-                                            <asp:LinkButton runat="server" ID="logar" CssClass="btn btn-success">
+                                            <asp:LinkButton runat="server" ID="logar" CssClass="btn btn-success" OnClick="logar_Click">
                                                 <span class="glyphicon glyphicon-log-in"></span> Logar
                                             </asp:LinkButton>
                                          <asp:LinkButton runat="server" ID="cancelar" CssClass="btn btn-danger">
