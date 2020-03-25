@@ -17,23 +17,26 @@
             </div>
         </li>
     </ul>
-    <div class="row">
-        <div class="col-md-8 col-md-2">
-            <div class="thumbnail">
-                <img src="..." alt="...">
-                <div class="caption">
-                    <h5>Nome item</h5>
-                    <p>
-                        <asp:LinkButton runat="server" ID="Reinvidicar" CssClass="btn btn-default btn-xs">
+    <asp:Repeater runat="server" ID="chamado">
+        <ItemTemplate>
+        <div class="row">
+            <div class="col-md-8 col-md-2">
+                <div class="thumbnail">
+                    <img src="..." alt="...">
+                    <div class="caption">
+                        <h5>Nome item</h5>
+                        <p>
+                            <asp:LinkButton runat="server" ID="btnReinvidicar" CssClass="btn btn-default btn-xs">
                     <span class="glyphicon glyphicon-hand-up"></span>
-                        </asp:LinkButton>
-                        <asp:LinkButton runat="server" ID="Detalhar" CssClass="btn btn-default btn-xs">
+                            </asp:LinkButton>
+                            <asp:LinkButton runat="server" ID="btnDetalhar" CssClass="btn btn-default btn-xs">
                     <span class="glyphicon glyphicon-align-justify"></span>
-                        </asp:LinkButton>
-                       
+                            </asp:LinkButton>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        </ItemTemplate>
+    </asp:Repeater>
 </asp:Content>
 
