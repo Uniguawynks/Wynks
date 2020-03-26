@@ -27,40 +27,79 @@ public class Usuario : DBUsuario
     public DateTime DataNascimento { get => _dataNascimento; set => _dataNascimento = value; }
     public string Funcao { get => _funcao; set => _funcao = value; }
     public string Email { get => _email; set => _email = value; }
-
-    public string Validar(string nome, string cpf, DateTime dataNascimento, string funcao)
+    public string CpfFormatado
     {
-        if (string.IsNullOrEmpty(nome))
+        get
+        {
+            return this.Cpf.Substring(0, 3) + "." +
+                this.Cpf.Substring(3, 3) + "." +
+                this.Cpf.Substring(6, 3) + "-" +
+                this.Cpf.Substring(9, 2);
+        }
+    }
+
+    public string Validar(string senha, string confirmacaoSenha)
+    {
+        if (string.IsNullOrEmpty(this.Nome))
         {
             return "Nome inválido!";
         }
 
-        if (string.IsNullOrEmpty(cpf))
+        if (string.IsNullOrEmpty(this.Cpf))
         {
             return "Preencha corretamente o CPF!";
         }
         else
         {
-            if(cpf.Length != 11)
+            this.Cpf = this.Cpf.Replace(".", "").Replace("-", "");
+
+            if(this.Cpf.Length != 11)
             {
                 return "Um CPF precisa ter 11 dígitos, verifique!";
             }
         }
 
-        if(dataNascimento == new DateTime())
+        if(this.DataNascimento == new DateTime())
         {
             return "Data de nascimento inválida!";
         }
 
-        if(string.IsNullOrEmpty(funcao))
+        if(string.IsNullOrEmpty(this.Funcao))
         {
             return "Função inválida";
         }
 
-        return "";
+        if(!senha.Equals(confirmacaoSenha))
+        {
+            return "A confirmação de senha está diferente da senha!";
+        }
+
+        if (VerificarExistencia(this.Cpf))
+        {
+            return "Já existe um usuário cadastrado para este CPF!";
+        }
+
+        try
+        {
+            this.Inserir(senha);
+        }
+        catch
+        {
+            return "Os dados estão corretos, porém houve um erro na gravação do banco de dados, o usuário não foi inserido!";
+        }
+
+        return "Usuário cadastrado com sucesso!";
     }
     public bool Logar(string senha)
     {
         return base.DBLogar(this, senha);
+    }
+    public void Inserir(string senha)
+    {
+        base.DBInserir(this, senha);
+    }
+    public bool VerificarExistencia(string cpf)
+    {
+        return base.DBVerificarExistencia(cpf);
     }
 }
