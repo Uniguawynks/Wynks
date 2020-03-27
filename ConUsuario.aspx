@@ -4,8 +4,8 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <script type="text/javascript">
-        
-    </script>
+
+</script>
     <ul class="list-group">
         <li class="list-group-item active">
             <div class="row">
@@ -95,7 +95,7 @@
                                 <span class="glyphicon glyphicon-ok"></span> Salvar
                             </asp:LinkButton>
                             <button id="btnCancelar" class="btn btn-danger" data-dismiss="modal">
-                                <span class="glyphicon glyphicon-remove"></span> Cancelar
+                                <span class="glyphicon glyphicon-remove"></span>Cancelar
                             </button>
 
                         </div>
@@ -109,6 +109,32 @@
             <asp:AsyncPostBackTrigger ControlID="lbtAdd" EventName="Click" />
         </Triggers>
     </asp:UpdatePanel>
+    <!-- /.modal -->
+
+    <!-- pop up exclusão de usuário -->
+    <div class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Excluir usuário title</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Deseja excluir o usuário selecionado?</p>
+                </div>
+                <div class="modal-footer">
+                    <asp:LinkButton runat="server" ID="btnSalvarExclusao" CssClass="btn btn-success" OnClick="btnSalvar_Click">
+                                <span class="glyphicon glyphicon-ok"></span> Salvar
+                    </asp:LinkButton>
+                    <button id="btnCancelarExclusao" class="btn btn-danger" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-remove"></span>Cancelar
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
     <!-- /.modal -->
 </asp:Content>
 
