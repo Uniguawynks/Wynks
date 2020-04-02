@@ -13,4 +13,8 @@ public static class DBTools
     {
         return new SqlConnection("Server=tcp:kolodabr.database.windows.net,1433;Initial Catalog=Projeto;Persist Security Info=False;User ID=arthur.koloda;Password=@BeXx0805;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
     }
+    public static string URLImagem()
+    {
+        return "~/Chamados/";
+    }
 }

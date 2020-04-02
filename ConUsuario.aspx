@@ -48,7 +48,7 @@
                                         <span class="glyphicon glyphicon-pencil"></span>
                                             </asp:LinkButton>
                                             <asp:LinkButton runat="server" ID="btnExcluir" CssClass="btn btn-default btn-xs" CommandArgument='<%# Eval("Codigo") %>' OnClick="btnExcluir_Click">
-                                        <span class="glyphicon glyphicon-trash"></span>
+                                                <span class="glyphicon glyphicon-trash"></span>
                                             </asp:LinkButton>
                                         </ContentTemplate>
                                     </asp:UpdatePanel>

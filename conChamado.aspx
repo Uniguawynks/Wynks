@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="conChamado.aspx.cs" Inherits="conChamado" %>
+﻿<%@ Page Title="Chamados" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="conChamado.aspx.cs" Inherits="conChamado" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
@@ -26,13 +26,12 @@
                         <img src="..." alt="...">
                         <div class="caption">
                             <h5>Nome item</h5>
-                            <p>
-                                <asp:LinkButton runat="server" ID="btnReinvidicar" CssClass="btn btn-default btn-xs">
-                    <span class="glyphicon glyphicon-hand-up"></span>
-                                </asp:LinkButton>
-                                <asp:LinkButton runat="server" ID="btnDetalhar" CssClass="btn btn-default btn-xs">
-                    <span class="glyphicon glyphicon-align-justify"></span>
-                                </asp:LinkButton>
+                            <asp:LinkButton runat="server" ID="btnReinvidicar" CssClass="btn btn-default btn-xs">
+                                <span class="glyphicon glyphicon-hand-up"></span>
+                            </asp:LinkButton>
+                            <asp:LinkButton runat="server" ID="btnDetalhar" CssClass="btn btn-default btn-xs">
+                                <span class="glyphicon glyphicon-align-justify"></span>
+                            </asp:LinkButton>
                         </div>
                     </div>
                 </div>
