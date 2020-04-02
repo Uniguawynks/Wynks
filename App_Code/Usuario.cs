@@ -14,11 +14,19 @@ public class Usuario : DBUsuario
     private DateTime _dataNascimento;
     private string _funcao;
     private string _email;
+    private bool _ativo;
     public Usuario()
     {
         //
         // TODO: Adicionar lógica do construtor aqui
         //
+    }
+
+    public Usuario(int codigo)
+    {
+        this.Codigo = codigo;
+
+        base.DBSelecionar(this);
     }
 
     public int Codigo { get => _codigo; set => _codigo = value; }
@@ -38,7 +46,9 @@ public class Usuario : DBUsuario
         }
     }
 
-    public string Validar(string senha, string confirmacaoSenha)
+    public bool Ativo { get => _ativo; set => _ativo = value; }
+
+    public string ValidarInsercao(string senha, string confirmacaoSenha)
     {
         if (string.IsNullOrEmpty(this.Nome))
         {
@@ -90,6 +100,52 @@ public class Usuario : DBUsuario
 
         return "Usuário cadastrado com sucesso!";
     }
+    public string ValidarAlteracao()
+    {
+        if (string.IsNullOrEmpty(this.Nome))
+        {
+            return "Nome inválido!";
+        }
+
+        if (string.IsNullOrEmpty(this.Cpf))
+        {
+            return "Preencha corretamente o CPF!";
+        }
+        else
+        {
+            this.Cpf = this.Cpf.Replace(".", "").Replace("-", "");
+
+            if (this.Cpf.Length != 11)
+            {
+                return "Um CPF precisa ter 11 dígitos, verifique!";
+            }
+        }
+
+        if (this.DataNascimento == new DateTime())
+        {
+            return "Data de nascimento inválida!";
+        }
+
+        if (string.IsNullOrEmpty(this.Funcao))
+        {
+            return "Função inválida";
+        }
+
+        try
+        {
+            this.Atualizar();
+        }
+        catch
+        {
+            return "Os dados estão corretos, porém houve um erro na gravação do banco de dados, o usuário não foi alterado!";
+        }
+
+        return "Usuário alterado com sucesso!";
+    }
+    public void Atualizar()
+    {
+        base.DBAtualizar(this);
+    }
     public bool Logar(string senha)
     {
         return base.DBLogar(this, senha);
@@ -101,5 +157,13 @@ public class Usuario : DBUsuario
     public bool VerificarExistencia(string cpf)
     {
         return base.DBVerificarExistencia(cpf);
+    }
+    public List<Usuario> Listar(string busca)
+    {
+        return base.DBListar(busca);
+    }
+    public void Desativar()
+    {
+        base.DBDesativar(this);
     }
 }
