@@ -164,6 +164,31 @@
     </asp:UpdatePanel>
     <!-- /.modal -->
 
+    <!-- pop up entrega do item -->
+    <asp:UpdatePanel runat="server" ID="upEntrega" UpdateMode="Conditional">
+        <ContentTemplate>
+            <div class="modal fade" tabindex="-1" role="dialog" id="modalEntrega">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Entrega do item</h4>
+                        </div>
+                        <div class="modal-body">
+                            <!--  aqui vai a lista dos chamados, to pensando em como fazer o grid -->
+                        </div>
+                        <div class="modal-footer">
+                            
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+        </ContentTemplate>
+
+    </asp:UpdatePanel>
+    <!-- /.modal -->
     <asp:UpdatePanel runat="server" ID="upHiddenFields" UpdateMode="Conditional">
         <ContentTemplate>
             <asp:HiddenField runat="server" ID="hfEditarUsuario" Value="0" OnValueChanged="hfEditarUsuario_ValueChanged" />
