@@ -148,5 +148,70 @@
             return false;
         }
     </script>
+    <!-- PopUp para gerar um chamado na tela de consulta do item, tem que estar como administrador para aparecer o botão -->
+    <asp:UpdatePanel runat="server" ID="UpGerarChamado" UpdateMode="Conditional">
+        <ContentTemplate>
+            <div class="modal fade" tabindex="-1" role="dialog" id="modalGerarChamado">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Gerar chamado</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Selecione o item para gerar o chamado</p>
+                            <asp:UpdatePanel runat="server" ID="upChamados" UpdateMode="Conditional">
+                                <ContentTemplate>
+                                    <ul class="list-group">
+                                        <li class="list-group-item active">
+                                            <div class="row">
+                                                <div class="col-md-2">Codigo</div>
+                                                <div class="col-md-3">Nome do item</div>
+                                                <div class="col-md-4">data e hora da abertura</div>
+                                                <div class="col-md-3 text-right">
+                                                    <asp:UpdatePanel runat="server" ID="upAbrirConfirmarChamado" UpdateMode="Conditional">
+                                                        <ContentTemplate>
+                                                            <asp:LinkButton runat="server" ID="btnConfirmarChamado" CssClass="btn btn-default btn-xs">
+                                <span class="glyphicon glyphicon-ok-circle"></span>
+                                                            </asp:LinkButton>
+                                                        </ContentTemplate>
+                                                    </asp:UpdatePanel>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <asp:Repeater runat="server" ID="rptChamado">
+                                            <ItemTemplate>
+                                                <li class="list-group-chamado" runat="server" id="liChamado">
+                                                    <div class="row">
+                                                        <div class="col-md-2"><%# Eval("Codigo") %></div>
+                                                        <div class="col-md-3">
+                                                            <%# Eval("Nome do Item") %>
+                                                        </div>
+                                                        <div class="col-md-4"><%# Eval("Data e hora de abertura") %></div>
+                                                   
+                                                    </div>
+                                                </li>
+                                            </ItemTemplate>
+                                        </asp:Repeater>
+                                    </ul>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
+                        </div>
+                        <div class="modal-footer">
+                            <asp:LinkButton runat="server" ID="btnGerarChamado" CssClass="btn btn-success">
+                                        <span class="glyphicon glyphicon-ok"></span> Salvar
+                            </asp:LinkButton>
+                            <button id="btnCancelarGeradorChamado" class="btn btn-danger" data-dismiss="modal">
+                                <span class="glyphicon glyphicon-remove"></span>Cancelar
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+        </ContentTemplate>
+    </asp:UpdatePanel>
+
 </asp:Content>
 
