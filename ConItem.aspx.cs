@@ -9,7 +9,7 @@ public partial class ConItem : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        
     }
 
     protected void lbtCadastrar_Click(object sender, EventArgs e)
@@ -18,6 +18,8 @@ public partial class ConItem : System.Web.UI.Page
         tbDescricaoItem.Text = "";
         tbLocalEncontrado.Text = "";
         tbNomeItem.Text = "";
+
+        lbtCadastrarOk.Visible = true;
 
         ExecScriptManager("$('#modalCadastro').modal('show');");
     }
@@ -48,6 +50,43 @@ public partial class ConItem : System.Web.UI.Page
 
                 ExecScriptManager("$('#modalCadastro').modal('hide');");
             }
+        }
+    }
+
+    protected void lbtBuscar_Click(object sender, EventArgs e)
+    {
+        rptItens.DataSource = new Item().Listar(tbBusca.Text);
+        rptItens.DataBind();
+    }
+
+    protected void rptItens_ItemDataBound(object sender, RepeaterItemEventArgs e)
+    {
+        if(e.Item.ItemType == ListItemType.AlternatingItem || e.Item.ItemType == ListItemType.Item)
+        {
+            Item item = e.Item.DataItem as Item;
+
+            LinkButton lbtDetalhar = e.Item.FindControl("lbtDetalhar") as LinkButton;
+
+            lbtDetalhar.Attributes.Add("onclick", "return DetalharItem('" + item.Codigo + "');");
+        }
+    }
+
+    protected void hfDetalharItem_ValueChanged(object sender, EventArgs e)
+    {
+        if(hfDetalharItem.Value != "0")
+        {
+            Item item = new Item(Convert.ToInt32(hfDetalharItem.Value));
+
+            tbDataEncontrado.Text = item.DataHoraEncontrado.ToShortDateString();
+            tbDescricaoItem.Text = item.Descricao;
+            tbLocalEncontrado.Text = item.LocalEncontrado;
+            tbNomeItem.Text = item.Nome;
+
+            lbtCadastrarOk.Visible = false;
+
+            ExecScriptManager("$('#modalCadastro').modal('show');");
+
+            hfDetalharItem.Value = "0";
         }
     }
 }

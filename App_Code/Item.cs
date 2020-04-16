@@ -22,6 +22,11 @@ public class Item : DBItem
         // TODO: Adicionar lógica do construtor aqui
         //
     }
+    public Item(int codigo)
+    {
+        this.Codigo = codigo;
+        base.DBSelecionar(this);
+    }
 
     public int Codigo { get => _codigo; set => _codigo = value; }
     public string Nome { get => _nome; set => _nome = value; }
@@ -75,4 +80,8 @@ public class Item : DBItem
 
         return "";
     }
+    public List<Item> Listar(string busca)
+    {
+        return base.DBListar(busca);
+    } 
 }

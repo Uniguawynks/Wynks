@@ -1,16 +1,18 @@
 ﻿<%@ Page Title="Itens" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="ConItem.aspx.cs" Inherits="ConItem" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-     <ul class="list-group">
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <ul class="list-group">
         <li class="list-group-item active">
             <div class="row">
                 <div class="col-md-12">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Procurando por...">
+                        <asp:TextBox runat="server" ID="tbBusca" CssClass="form-control" placeholder="Pesquisa por nome e local..."></asp:TextBox>
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">Pesquisar</button>
+                            <asp:LinkButton runat="server" ID="lbtBuscar" CssClass="btn btn-default" OnClick="lbtBuscar_Click">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </asp:LinkButton>
                             <asp:LinkButton runat="server" ID="lbtCadastrar" CssClass="btn btn-success" OnClick="lbtCadastrar_Click">
                                 <span class="glyphicon glyphicon-plus"></span>
                             </asp:LinkButton>
@@ -21,29 +23,36 @@
         </li>
     </ul>
 
-    <div class="row">
-        <asp:Repeater runat="server" ID="Item">
-            <ItemTemplate>
-                <div class="col-xs-12 col-md-2">
-                    <div class="thumbnail">
-                        <img src="..." alt="...">
-                        <div class="caption">
-                            <h5>Nome item</h5>
-                            <asp:LinkButton runat="server" ID="btnReinvidicar" CssClass="btn btn-default btn-xs">
-                                <span class="glyphicon glyphicon-hand-up"></span>
-                            </asp:LinkButton>
-                            <asp:LinkButton runat="server" ID="btnDetalhar" CssClass="btn btn-default btn-xs">
-                                <span class="glyphicon glyphicon-align-justify"></span>
-                            </asp:LinkButton>
-                            <asp:LinkButton runat="server" ID="btnEntrega" CssClass="btn btn-default btn-xs">
-                                <span class="glyphicon glyphicon-check"></span>
-                            </asp:LinkButton>
+    <asp:UpdatePanel runat="server" ID="upItens" UpdateMode="Conditional">
+        <ContentTemplate>
+            <div class="row">
+                <asp:Repeater runat="server" ID="rptItens" OnItemDataBound="rptItens_ItemDataBound">
+                    <ItemTemplate>
+                        <div class="col-xs-12 col-md-2">
+                            <div class="thumbnail">
+                                <img src="..." alt="...">
+                                <div class="caption">
+                                    <h5>Nome item</h5>
+                                    <asp:LinkButton runat="server" ID="btnReinvidicar" CssClass="btn btn-default btn-xs">
+                                        <span class="glyphicon glyphicon-hand-up"></span>
+                                    </asp:LinkButton>
+                                    <asp:LinkButton runat="server" ID="btnDetalhar" CssClass="btn btn-default btn-xs">
+                                        <span class="glyphicon glyphicon-align-justify"></span>
+                                    </asp:LinkButton>
+                                    <asp:LinkButton runat="server" ID="btnEntrega" CssClass="btn btn-default btn-xs">
+                                        <span class="glyphicon glyphicon-check"></span>
+                                    </asp:LinkButton>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </ItemTemplate>
-        </asp:Repeater>
-    </div>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </div>
+        </ContentTemplate>
+        <Triggers>
+            <asp:AsyncPostBackTrigger ControlID="lbtBuscar" EventName="Click" />
+        </Triggers>
+    </asp:UpdatePanel>
     <asp:UpdatePanel runat="server" ID="upCadastro" UpdateMode="Conditional">
         <ContentTemplate>
             <div class="modal fade" tabindex="-1" role="dialog" id="modalCadastro">
@@ -93,10 +102,11 @@
         </ContentTemplate>
         <Triggers>
             <asp:AsyncPostBackTrigger ControlID="lbtCadastrar" EventName="Click" />
+            <asp:AsyncPostBackTrigger ControlID="hfDetalharItem" EventName="ValueChanged" />
         </Triggers>
     </asp:UpdatePanel>
-     <!-- PopUp confirmação de reivindicação -->
-        <asp:UpdatePanel runat="server" ID="upReivindicar" UpdateMode="Conditional">
+    <!-- PopUp confirmação de reivindicação -->
+    <asp:UpdatePanel runat="server" ID="upReivindicar" UpdateMode="Conditional">
         <ContentTemplate>
             <div class="modal fade" tabindex="-1" role="dialog" id="modalReivindicar">
                 <div class="modal-dialog" role="document">
@@ -123,6 +133,20 @@
             </div>
         </ContentTemplate>
     </asp:UpdatePanel>
+    <asp:UpdatePanel runat="server" ID="upHiddenFields" UpdateMode="Conditional">
+        <ContentTemplate>
+            <asp:HiddenField runat="server" ID="hfDetalharItem" Value="0" OnValueChanged="hfDetalharItem_ValueChanged" />
+        </ContentTemplate>
+    </asp:UpdatePanel>
+    <script type="text/javascript">
+        function DetalharItem(codigo) {
+            var hf = $('#ContentPlaceHolder1_hfDetalharItem');
 
+            hf.val(codigo);
+            __doPostBack(hf.attr('name'), '');
+
+            return false;
+        }
+    </script>
 </asp:Content>
 
