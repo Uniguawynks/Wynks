@@ -18,6 +18,7 @@ public class Solicitacao : DBSolicitacao
     private string _foneAluno;
     private string _localPerda;
     private DateTime _dataHoraPerda;
+    private string _extensaoArquivoImagem;
     public Solicitacao()
     {
         //
@@ -35,12 +36,13 @@ public class Solicitacao : DBSolicitacao
     public string NomeAluno { get => _nomeAluno; set => _nomeAluno = value; }
     public string EmailAluno { get => _emailAluno; set => _emailAluno = value; }
     public string FoneAluno { get => _foneAluno; set => _foneAluno = value; }
+    public string ExtensaoArquivoImagem { get => _extensaoArquivoImagem; set => _extensaoArquivoImagem = value; }
 
     public List<Solicitacao> Listar(string busca)
     {
         return base.DBListar(busca);
     }
-    public string ValidarInsercao(string nomeAluno, string cpf, string rg, string nomeItem, string descricaoItem, DateTime dataPerda, string localPerda, string telefone, string email)
+    public string ValidarInsercao(string nomeAluno, string cpf, string rg, string nomeItem, string descricaoItem, DateTime dataPerda, string localPerda, string telefone, string email, string extensao)
     {
         this.NomeAluno = nomeAluno;
         this.CpfAluno = cpf;
@@ -51,8 +53,9 @@ public class Solicitacao : DBSolicitacao
         this.LocalPerda = localPerda;
         this.FoneAluno = telefone;
         this.EmailAluno = email;
+        this.ExtensaoArquivoImagem = extensao;
 
-        if(string.IsNullOrEmpty(this.CpfAluno))
+        if (string.IsNullOrEmpty(this.CpfAluno))
         {
             return "Preencha corretamente o CPF!";
         }
@@ -112,12 +115,12 @@ public class Solicitacao : DBSolicitacao
         try
         {
             int codigo = base.DBInserir(this);
+
+            return "Codigo:" + codigo.ToString();
         }
         catch (Exception ex)
         {
             return "Os dados estão corretos, porém houve um problema ao inserí-los no banco de dados, verifique!";
         }
-
-        return "Codigo:" + Codigo.ToString();
     }
 }

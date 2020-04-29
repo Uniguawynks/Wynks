@@ -30,13 +30,13 @@
                     <ItemTemplate>
                         <div class="col-xs-12 col-md-2">
                             <div class="thumbnail">
-                                <img src="..." alt="...">
+                                <asp:Image runat="server" ID="imgItem" CssClass="img-responsive" style="height:150px;" />
                                 <div class="caption">
-                                    <h5>Nome item</h5>
+                                    <h5><%# Eval("Nome") %></h5>
                                     <asp:LinkButton runat="server" ID="btnReinvidicar" CssClass="btn btn-default btn-xs">
                                         <span class="glyphicon glyphicon-hand-up"></span>
                                     </asp:LinkButton>
-                                    <asp:LinkButton runat="server" ID="btnDetalhar" CssClass="btn btn-default btn-xs">
+                                    <asp:LinkButton runat="server" ID="lbtDetalhar" CssClass="btn btn-default btn-xs">
                                         <span class="glyphicon glyphicon-align-justify"></span>
                                     </asp:LinkButton>
                                     <asp:LinkButton runat="server" ID="btnEntrega" CssClass="btn btn-default btn-xs">
@@ -51,6 +51,7 @@
         </ContentTemplate>
         <Triggers>
             <asp:AsyncPostBackTrigger ControlID="lbtBuscar" EventName="Click" />
+            <asp:PostBackTrigger ControlID="lbtCadastrarOk" />
         </Triggers>
     </asp:UpdatePanel>
     <asp:UpdatePanel runat="server" ID="upCadastro" UpdateMode="Conditional">
@@ -60,31 +61,38 @@
                     <div class="modal-content">
                         <div class="modal-header">Cadastrar Novo Item</div>
                         <div class="modal-body">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <label>Nome do Item</label>
-                                    <asp:TextBox runat="server" ID="tbNomeItem" CssClass="form-control" MaxLength="50"></asp:TextBox>
-                                </div>
-                                <div class="col-xs-12">
-                                    <label>Descrição do Item</label>
-                                    <asp:TextBox runat="server" ID="tbDescricaoItem" CssClass="form-control" TextMode="MultiLine"></asp:TextBox>
-                                </div>
-                                <div class="col-xs-12">
-                                    <label>Data em que foi encontrado</label>
-                                    <asp:TextBox runat="server" ID="tbDataEncontrado" CssClass="form-control" TextMode="Date"></asp:TextBox>
-                                </div>
-                                <div class="col-xs-12">
-                                    <label>Local em que foi encontrado</label>
-                                    <asp:TextBox runat="server" ID="tbLocalEncontrado" CssClass="form-control"></asp:TextBox>
-                                </div>
-                                <div class="col-xs-12">
-                                    <div class="form-group">
-                                        <label for="exampleInputFile">Escolher imagem do item</label>
-                                        <asp:FileUpload runat="server" ID="fuImagem" />
-                                        <p class="help-block">Selecione a imagem do item.</p>
+                            <asp:UpdatePanel runat="server" ID="upCad" UpdateMode="Always">
+                                <ContentTemplate>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <label>Nome do Item</label>
+                                            <asp:TextBox runat="server" ID="tbNomeItem" CssClass="form-control" MaxLength="50"></asp:TextBox>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <label>Descrição do Item</label>
+                                            <asp:TextBox runat="server" ID="tbDescricaoItem" CssClass="form-control" TextMode="MultiLine"></asp:TextBox>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <label>Data em que foi encontrado</label>
+                                            <asp:TextBox runat="server" ID="tbDataEncontrado" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <label>Local em que foi encontrado</label>
+                                            <asp:TextBox runat="server" ID="tbLocalEncontrado" CssClass="form-control"></asp:TextBox>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="form-group">
+                                                <label for="exampleInputFile">Escolher imagem do item</label>
+                                                <asp:FileUpload runat="server" ID="fuImagem" />
+                                                <p class="help-block">Selecione a imagem do item.</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
+                                </ContentTemplate>
+                                <Triggers>
+                                    <asp:PostBackTrigger ControlID="lbtCadastrarOk" />
+                                </Triggers>
+                            </asp:UpdatePanel>
                         </div>
                         <div class="modal-footer">
                             <asp:LinkButton runat="server" ID="lbtCadastrarOk" CssClass="btn btn-success" OnClick="lbtCadastrarOk_Click">
@@ -188,7 +196,7 @@
                                                             <%# Eval("Nome do Item") %>
                                                         </div>
                                                         <div class="col-md-4"><%# Eval("Data e hora de abertura") %></div>
-                                                   
+
                                                     </div>
                                                 </li>
                                             </ItemTemplate>

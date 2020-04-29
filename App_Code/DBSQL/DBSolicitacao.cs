@@ -14,7 +14,7 @@ public abstract class DBSolicitacao
     {
         SqlCommand CommandListar = new SqlCommand(@"select Codigo, CpfAluno, RgAluno, ItemNome, ItemDescricao,
                                                        NomeAluno, EmailAluno, FoneAluno
-                                                       LocalPerda, DataHoraPerda
+                                                       LocalPerda, DataHoraPerda, ExtensaoArquivoImagem
                                                     from SOLICITACAO with(NoLock)
                                                     where SOLICITACAO.ItemNome like '%' + @Busca + '%'
                                                        or SOLICITACAO.NomeAluno like '%' + @Busca + '%'", DBTools.Conn());
@@ -44,6 +44,7 @@ public abstract class DBSolicitacao
             item.FoneAluno = DR["FoneAluno"].ToString();
             item.DataHoraPerda = Convert.ToDateTime(DR["DataHoraPerda"]);
             item.LocalPerda = DR["LocalPerda"].ToString();
+            item.ExtensaoArquivoImagem = DR["ExtensaoArquivoImagem"].ToString();
 
             lista.Add(item);
         }
@@ -54,8 +55,8 @@ public abstract class DBSolicitacao
     }
     protected int DBInserir(Solicitacao solicitacao)
     {
-        SqlCommand CommandInsert = new SqlCommand(@"insert into SOLICITACAO (NomeAluno,  CpfAluno,  RgAluno,  EmailAluno,  FoneAluno,  ItemNome,  ItemDescricao,  LocalPerda,  DataHoraPerda)
-                                                                     values(@NomeAluno, @CpfAluno, @RgAluno, @EmailAluno, @FoneAluno, @ItemNome, @ItemDescricao, @LocalPerda, @DataHoraPerda)
+        SqlCommand CommandInsert = new SqlCommand(@"insert into SOLICITACAO (NomeAluno,  CpfAluno,  RgAluno,  EmailAluno,  FoneAluno,  ItemNome,  ItemDescricao,  LocalPerda,  DataHoraPerda, ExtensaoArquivoImagem)
+                                                                     values(@NomeAluno, @CpfAluno, @RgAluno, @EmailAluno, @FoneAluno, @ItemNome, @ItemDescricao, @LocalPerda, @DataHoraPerda, @ExtensaoArquivoImagem)
 
                                                     select max(Codigo) from SOLICITACAO with(Nolock)", DBTools.Conn());
 
@@ -70,6 +71,7 @@ public abstract class DBSolicitacao
         CommandInsert.Parameters.Add("@ItemDescricao", SqlDbType.VarChar, -1);
         CommandInsert.Parameters.Add("@DataHoraPerda", SqlDbType.DateTime);
         CommandInsert.Parameters.Add("@LocalPerda", SqlDbType.VarChar, 100);
+        CommandInsert.Parameters.Add("@ExtensaoArquivoImagem", SqlDbType.VarChar, 10);
 
         CommandInsert.Parameters["@NomeAluno"].Value = solicitacao.NomeAluno;
         CommandInsert.Parameters["@CpfAluno"].Value = solicitacao.CpfAluno;
@@ -78,8 +80,9 @@ public abstract class DBSolicitacao
         CommandInsert.Parameters["@FoneAluno"].Value = solicitacao.FoneAluno;
         CommandInsert.Parameters["@ItemNome"].Value = solicitacao.NomeItem;
         CommandInsert.Parameters["@ItemDescricao"].Value = solicitacao.DescricaoItem;
+        CommandInsert.Parameters["@ExtensaoArquivoImagem"].Value = solicitacao.ExtensaoArquivoImagem;
 
-        if(solicitacao.DataHoraPerda == new DateTime())
+        if (solicitacao.DataHoraPerda == new DateTime())
         {
             CommandInsert.Parameters["@DataHoraPerda"].Value = DBNull.Value;
         }

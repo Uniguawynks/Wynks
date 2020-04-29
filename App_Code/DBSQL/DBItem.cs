@@ -10,10 +10,12 @@ using System.Web;
 /// </summary>
 public abstract class DBItem
 {
-    protected void DBInserir(Item item)
+    protected int DBInserir(Item item)
     {
-        SqlCommand CommandInserir = new SqlCommand(@"insert into ITEM (Nome, Descricao, DataHoraEncontrado, Local, CodigoUsuarioCadastrante)
-                                                                values(@Nome, @Descricao, @Data, @Local, @Cadastrante)", DBTools.Conn());
+        SqlCommand CommandInserir = new SqlCommand(@"insert into ITEM (Nome, Descricao, DataEncontrado, Local, CodigoUsuarioCadastrante, ExtensaoArquivoImagem)
+                                                                values(@Nome, @Descricao, @Data, @Local, @Cadastrante, @Extensao)
+
+                                                     select max(Codigo) from ITEM with(NoLock)", DBTools.Conn());
 
         CommandInserir.CommandType = CommandType.Text;
 
@@ -22,21 +24,25 @@ public abstract class DBItem
         CommandInserir.Parameters.Add("@Data", SqlDbType.DateTime);
         CommandInserir.Parameters.Add("@Local", SqlDbType.VarChar, 50);
         CommandInserir.Parameters.Add("@Cadastrante", SqlDbType.Int);
+        CommandInserir.Parameters.Add("@Extensao", SqlDbType.VarChar, 10);
 
         CommandInserir.Parameters["@Nome"].Value = item.Nome;
         CommandInserir.Parameters["@Descricao"].Value = item.Descricao;
         CommandInserir.Parameters["@Data"].Value = item.DataHoraEncontrado;
         CommandInserir.Parameters["@Local"].Value = item.LocalEncontrado;
         CommandInserir.Parameters["@Cadastrante"].Value = item.Cadastrante.Codigo;
+        CommandInserir.Parameters["@Extensao"].Value = item.ExtensaoArquivoImagem;
 
         CommandInserir.Connection.Open();
-        CommandInserir.ExecuteNonQuery();
+        int codigo = Convert.ToInt32(CommandInserir.ExecuteScalar());
         CommandInserir.Connection.Close();
+
+        return codigo;
     }
 
     protected void DBSelecionar(Item item)
     {
-        SqlCommand CommandSelecionar = new SqlCommand(@"select Nome, Descricao, DataHoraEncontrado, Local, CodigoUsuarioCadastrante
+        SqlCommand CommandSelecionar = new SqlCommand(@"select Nome, Descricao, DataEncontrado, Local, CodigoUsuarioCadastrante, ExtensaoArquivoImagem
                                                         from ITEM with(NoLock)
                                                         where Codigo = @Codigo", DBTools.Conn());
 
@@ -53,9 +59,10 @@ public abstract class DBItem
         {
             item.Nome = DR["Nome"].ToString();
             item.Descricao = DR["Descricao"].ToString();
-            item.DataHoraEncontrado = Convert.ToDateTime(DR["DataHoraEncontrado"]);
+            item.DataHoraEncontrado = Convert.ToDateTime(DR["DataEncontrado"]);
             item.LocalEncontrado = DR["Local"].ToString();
             item.Cadastrante = new Usuario(Convert.ToInt32(DR["CodigoUsuarioCadastrante"]));
+            item.ExtensaoArquivoImagem = DR["ExtensaoArquivoImagem"].ToString();
         }
 
         CommandSelecionar.Connection.Close();
@@ -63,7 +70,7 @@ public abstract class DBItem
 
     protected List<Item> DBListar(string busca)
     {
-        SqlCommand CommandListar = new SqlCommand(@"select Codigo, Nome, Descricao, DataHoraEncontrado, Local, CodigoUsuarioCadastrante
+        SqlCommand CommandListar = new SqlCommand(@"select Codigo, Nome, Descricao, DataEncontrado, Local, CodigoUsuarioCadastrante, ExtensaoArquivoImagem
                                                     from ITEM with(NoLock)
                                                     where Nome like '%' + @Busca + '%'
                                                         and Local like '%' + @Busca + '%'", DBTools.Conn());
@@ -86,9 +93,10 @@ public abstract class DBItem
             item.Codigo = Convert.ToInt32(DR["Codigo"]);
             item.Nome = DR["Nome"].ToString();
             item.Descricao = DR["Descricao"].ToString();
-            item.DataHoraEncontrado = Convert.ToDateTime(DR["DataHoraEncontrado"]);
+            item.DataHoraEncontrado = Convert.ToDateTime(DR["DataEncontrado"]);
             item.LocalEncontrado = DR["Local"].ToString();
             item.Cadastrante = new Usuario(Convert.ToInt32(DR["CodigoUsuarioCadastrante"]));
+            item.ExtensaoArquivoImagem = DR["ExtensaoArquivoImagem"].ToString();
 
             lista.Add(item);
         }

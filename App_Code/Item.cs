@@ -16,6 +16,7 @@ public class Item : DBItem
     private string _imagemUrl;
     private Usuario _cadastrante;
     private string _nomeAlunoEncontrou;
+    private string _extensaoArquivoImagem;
     public Item()
     {
         //
@@ -36,6 +37,8 @@ public class Item : DBItem
     public string ImagemUrl { get => _imagemUrl; set => _imagemUrl = value; }
     public Usuario Cadastrante { get => _cadastrante; set => _cadastrante = value; }
     public string NomeAlunoEncontrou { get => _nomeAlunoEncontrou; set => _nomeAlunoEncontrou = value; }
+    public string ExtensaoArquivoImagem { get => _extensaoArquivoImagem; set => _extensaoArquivoImagem = value; }
+
     public string Validar(string nome, string data, string local)
     {
         if(string.IsNullOrEmpty(nome))
@@ -62,23 +65,25 @@ public class Item : DBItem
 
         return "";
     }
-    public string Inserir(string nome, string descricao, string local, string data, Usuario cadastrante)
+    public string Inserir(string nome, string descricao, string local, string data, Usuario cadastrante, string extensao)
     {
         this.Nome = nome;
         this.Descricao = descricao;
         this.LocalEncontrado = local;
         this.DataHoraEncontrado = Convert.ToDateTime(data);
+        this.Cadastrante = cadastrante;
+        this.ExtensaoArquivoImagem = extensao;
 
         try
         {
-            base.DBInserir(this);
+            int codigo = base.DBInserir(this);
+
+            return "Codigo:" + codigo.ToString();
         }
-        catch
+        catch (Exception ex)
         {
             return "Os parâmetros estão certos, mas houve um problema ao gravar os dados no banco, verifique!";
         }
-
-        return "";
     }
     public List<Item> Listar(string busca)
     {

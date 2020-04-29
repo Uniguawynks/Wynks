@@ -9,7 +9,7 @@ public partial class ConItem : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        
+        lbtBuscar_Click(sender, e);
     }
 
     protected void lbtCadastrar_Click(object sender, EventArgs e)
@@ -38,17 +38,32 @@ public partial class ConItem : System.Web.UI.Page
         }
         else
         {
-            string insercao = new Item().Inserir(tbNomeItem.Text, tbDescricaoItem.Text, tbLocalEncontrado.Text, tbDataEncontrado.Text, Session["Usuario"] as Usuario);
+            string extensao = "";
 
-            if(insercao != "")
+            try
+            {
+                extensao = fuImagem.FileName.Substring(fuImagem.FileName.LastIndexOf('.'));
+            }
+            catch
+            {
+                extensao = "";
+            }
+
+            string insercao = new Item().Inserir(tbNomeItem.Text, tbDescricaoItem.Text, tbLocalEncontrado.Text, tbDataEncontrado.Text, Session["Usuario"] as Usuario, extensao);
+
+            if(insercao.Substring(0, 7) != "Codigo:")
             {
                 ExecScriptManager("alert('" + insercao + "');");
             }
             else
             {
+                fuImagem.SaveAs(DBTools.URLImagemItem() + insercao.Substring(7) + fuImagem.FileName.Substring(fuImagem.FileName.LastIndexOf('.')));
+
                 ExecScriptManager("alert('Item cadastrado com sucesso!');");
 
                 ExecScriptManager("$('#modalCadastro').modal('hide');");
+
+                lbtBuscar_Click(sender, e);
             }
         }
     }
@@ -68,6 +83,13 @@ public partial class ConItem : System.Web.UI.Page
             LinkButton lbtDetalhar = e.Item.FindControl("lbtDetalhar") as LinkButton;
 
             lbtDetalhar.Attributes.Add("onclick", "return DetalharItem('" + item.Codigo + "');");
+
+            Image imgItem = e.Item.FindControl("imgItem") as Image;
+
+            if(item.ExtensaoArquivoImagem.Length > 0)
+            {
+                imgItem.ImageUrl = DBTools.URLImagemItemCurto() + item.Codigo + item.ExtensaoArquivoImagem;
+            }
         }
     }
 

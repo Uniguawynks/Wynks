@@ -11,10 +11,18 @@ public static class DBTools
 {
     public static SqlConnection Conn()
     {
-        return new SqlConnection("Server=tcp:kolodabr.database.windows.net,1433;Initial Catalog=Projeto;Persist Security Info=False;User ID=arthur.koloda;Password=@BeXx0805;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+        return new SqlConnection("Server=localhost;Database=Wynks;Trusted_Connection=True;Connection Timeout=30;");
     }
-    public static string URLImagem()
+    public static string URLImagemChamado()
     {
-        return "~/Chamados/";
+        return "C:/Users/Arthur/Desktop/Wynks2/Chamados/";
+    }
+    public static string URLImagemItem()
+    {
+        return "C:/Users/Arthur/Desktop/Wynks2/Itens/";
+    }
+    public static string URLImagemItemCurto()
+    {
+        return "~/Itens/";
     }
 }
