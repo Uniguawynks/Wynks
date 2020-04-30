@@ -12,9 +12,9 @@ public abstract class DBSolicitacao
 {
     protected List<Solicitacao> DBListar(string busca)
     {
-        SqlCommand CommandListar = new SqlCommand(@"select Codigo, CpfAluno, RgAluno, ItemNome, ItemDescricao,
-                                                       NomeAluno, EmailAluno, FoneAluno
-                                                       LocalPerda, DataHoraPerda, ExtensaoArquivoImagem
+        SqlCommand CommandListar = new SqlCommand(@"select Codigo, CpfAluno, RgAluno, ItemNome, ItemDescricao, LocalPerda,
+                                                       NomeAluno, EmailAluno, FoneAluno, ExtensaoArquivoImagem,
+                                                       DataHoraPerda, Atendido, UsuarioAtendimento, DataAtendimento
                                                     from SOLICITACAO with(NoLock)
                                                     where SOLICITACAO.ItemNome like '%' + @Busca + '%'
                                                        or SOLICITACAO.NomeAluno like '%' + @Busca + '%'", DBTools.Conn());
@@ -37,7 +37,7 @@ public abstract class DBSolicitacao
             item.Codigo = Convert.ToInt32(DR["Codigo"]);
             item.CpfAluno = DR["CpfAluno"].ToString();
             item.RgAluno = DR["RgAluno"].ToString();
-            item.NomeItem = DR["ItmeNome"].ToString();
+            item.NomeItem = DR["ItemNome"].ToString();
             item.DescricaoItem = DR["ItemDescricao"].ToString();
             item.NomeAluno = DR["NomeAluno"].ToString();
             item.EmailAluno = DR["EmailAluno"].ToString();
@@ -45,6 +45,13 @@ public abstract class DBSolicitacao
             item.DataHoraPerda = Convert.ToDateTime(DR["DataHoraPerda"]);
             item.LocalPerda = DR["LocalPerda"].ToString();
             item.ExtensaoArquivoImagem = DR["ExtensaoArquivoImagem"].ToString();
+            item.Atendido = Convert.ToInt32(DR["Atendido"]) == 1;
+            
+            if(item.Atendido)
+            {
+                item.DataAtendimento = Convert.ToDateTime(DR["DataAtendimento"]);
+                item.UsuarioAtendimento = new Usuario(Convert.ToInt32(DR["UsuarioAtendimento"]));
+            }
 
             lista.Add(item);
         }
@@ -53,6 +60,51 @@ public abstract class DBSolicitacao
 
         return lista;
     }
+
+    protected void DBSelecionar(Solicitacao solicitacao)
+    {
+        SqlCommand CommandSelecionar = new SqlCommand(@"select CpfAluno, RgAluno, ItemNome, ItemDescricao, LocalPerda,
+                                                            NomeAluno, EmailAluno, FoneAluno, ExtensaoArquivoImagem,
+                                                            DataHoraPerda, Atendido, UsuarioAtendimento, DataAtendimento
+                                                        from SOLICITACAO with(NoLock)
+                                                        where Codigo = @Codigo", DBTools.Conn());
+
+        CommandSelecionar.CommandType = CommandType.Text;
+
+        CommandSelecionar.Parameters.Add("@Codigo", SqlDbType.Int);
+        CommandSelecionar.Parameters["@Codigo"].Value = solicitacao.Codigo;
+
+        CommandSelecionar.Connection.Open();
+
+        SqlDataReader DR = CommandSelecionar.ExecuteReader();
+
+        List<Solicitacao> lista = new List<Solicitacao>();
+
+        if (DR.Read())
+        {
+            solicitacao.CpfAluno = DR["CpfAluno"].ToString();
+            solicitacao.RgAluno = DR["RgAluno"].ToString();
+            solicitacao.NomeItem = DR["ItemNome"].ToString();
+            solicitacao.DescricaoItem = DR["ItemDescricao"].ToString();
+            solicitacao.NomeAluno = DR["NomeAluno"].ToString();
+            solicitacao.EmailAluno = DR["EmailAluno"].ToString();
+            solicitacao.FoneAluno = DR["FoneAluno"].ToString();
+            solicitacao.DataHoraPerda = Convert.ToDateTime(DR["DataHoraPerda"]);
+            solicitacao.LocalPerda = DR["LocalPerda"].ToString();
+            solicitacao.ExtensaoArquivoImagem = DR["ExtensaoArquivoImagem"].ToString();
+
+            solicitacao.Atendido = Convert.ToInt32(DR["Atendido"]) == 1;
+
+            if (solicitacao.Atendido)
+            {
+                solicitacao.DataAtendimento = Convert.ToDateTime(DR["DataAtendimento"]);
+                solicitacao.UsuarioAtendimento = new Usuario(Convert.ToInt32(DR["UsuarioAtendimento"]));
+            }
+        }
+
+        CommandSelecionar.Connection.Close();
+    }
+
     protected int DBInserir(Solicitacao solicitacao)
     {
         SqlCommand CommandInsert = new SqlCommand(@"insert into SOLICITACAO (NomeAluno,  CpfAluno,  RgAluno,  EmailAluno,  FoneAluno,  ItemNome,  ItemDescricao,  LocalPerda,  DataHoraPerda, ExtensaoArquivoImagem)
@@ -107,5 +159,24 @@ public abstract class DBSolicitacao
         return codigo;
     }
 
+    protected void DBAtender(Solicitacao solicitacao, Usuario usuario)
+    {
+        SqlCommand CommandAtender = new SqlCommand(@"update SOLICITACAO
+                                                     set Atendido = 1,
+                                                         UsuarioAtendimento = @Usuario,
+                                                         DataAtendimento = getdate()
+                                                     where Codigo = @Codigo", DBTools.Conn());
 
+        CommandAtender.CommandType = CommandType.Text;
+
+        CommandAtender.Parameters.Add("@Usuario", SqlDbType.Int);
+        CommandAtender.Parameters.Add("@Codigo", SqlDbType.Int);
+
+        CommandAtender.Parameters["@Usuario"].Value = usuario.Codigo;
+        CommandAtender.Parameters["@Codigo"].Value = solicitacao.Codigo;
+
+        CommandAtender.Connection.Open();
+        CommandAtender.ExecuteNonQuery();
+        CommandAtender.Connection.Close();
+    }
 }

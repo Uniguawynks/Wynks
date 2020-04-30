@@ -19,13 +19,21 @@ public class Solicitacao : DBSolicitacao
     private string _localPerda;
     private DateTime _dataHoraPerda;
     private string _extensaoArquivoImagem;
+    private bool _atendido;
+    private Usuario _usuarioAtendimento;
+    private DateTime _dataAtendimento;
+
     public Solicitacao()
     {
         //
         // TODO: Adicionar lógica do construtor aqui
         //
     }
-
+    public Solicitacao(int codigo)
+    {
+        this.Codigo = codigo;
+        base.DBSelecionar(this);
+    }
     public int Codigo { get => _codigo; set => _codigo = value; }
     public string CpfAluno { get => _cpfAluno; set => _cpfAluno = value; }
     public string RgAluno { get => _rgAluno; set => _rgAluno = value; }
@@ -37,6 +45,9 @@ public class Solicitacao : DBSolicitacao
     public string EmailAluno { get => _emailAluno; set => _emailAluno = value; }
     public string FoneAluno { get => _foneAluno; set => _foneAluno = value; }
     public string ExtensaoArquivoImagem { get => _extensaoArquivoImagem; set => _extensaoArquivoImagem = value; }
+    public bool Atendido { get => _atendido; set => _atendido = value; }
+    public Usuario UsuarioAtendimento { get => _usuarioAtendimento; set => _usuarioAtendimento = value; }
+    public DateTime DataAtendimento { get => _dataAtendimento; set => _dataAtendimento = value; }
 
     public List<Solicitacao> Listar(string busca)
     {
@@ -122,5 +133,10 @@ public class Solicitacao : DBSolicitacao
         {
             return "Os dados estão corretos, porém houve um problema ao inserí-los no banco de dados, verifique!";
         }
+    }
+
+    public void Atender(Usuario usuario)
+    {
+        base.DBAtender(this, usuario);
     }
 }

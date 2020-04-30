@@ -25,4 +25,13 @@ public static class DBTools
     {
         return "~/Itens/";
     }
+
+    public static string URLImagemChamadoCurto()
+    {
+        return "~/Chamados/";
+    }
+    public static string FormatarCPF(string cpf)
+    {
+        return cpf.Substring(0, 3) + "." + cpf.Substring(3, 3) + "." + cpf.Substring(6, 3) + "-" + cpf.Substring(9, 2);
+    }
 }
