@@ -39,7 +39,7 @@
                                     <asp:LinkButton runat="server" ID="lbtDetalhar" CssClass="btn btn-default btn-xs">
                                         <span class="glyphicon glyphicon-align-justify"></span>
                                     </asp:LinkButton>
-                                    <asp:LinkButton runat="server" ID="btnEntrega" CssClass="btn btn-default btn-xs">
+                                    <asp:LinkButton runat="server" ID="lbtEntregar" CssClass="btn btn-default btn-xs">
                                         <span class="glyphicon glyphicon-check"></span>
                                     </asp:LinkButton>
                                 </div>
@@ -51,6 +51,7 @@
         </ContentTemplate>
         <Triggers>
             <asp:AsyncPostBackTrigger ControlID="lbtBuscar" EventName="Click" />
+            <asp:AsyncPostBackTrigger ControlID="hfRealizarEntrega" EventName="ValueChanged" />
             <asp:PostBackTrigger ControlID="lbtCadastrarOk" />
         </Triggers>
     </asp:UpdatePanel>
@@ -144,11 +145,29 @@
     <asp:UpdatePanel runat="server" ID="upHiddenFields" UpdateMode="Conditional">
         <ContentTemplate>
             <asp:HiddenField runat="server" ID="hfDetalharItem" Value="0" OnValueChanged="hfDetalharItem_ValueChanged" />
+            <asp:HiddenField runat="server" ID="hfEntregarItem" Value="0" OnValueChanged="hfEntregarItem_ValueChanged" />
+            <asp:HiddenField runat="server" ID="hfRealizarEntrega" Value="0" OnValueChanged="hfRealizarEntrega_ValueChanged" />
         </ContentTemplate>
     </asp:UpdatePanel>
     <script type="text/javascript">
         function DetalharItem(codigo) {
             var hf = $('#ContentPlaceHolder1_hfDetalharItem');
+
+            hf.val(codigo);
+            __doPostBack(hf.attr('name'), '');
+
+            return false;
+        }
+        function EntregarItem(codigo) {
+            var hf = $('#ContentPlaceHolder1_hfEntregarItem');
+
+            hf.val(codigo);
+            __doPostBack(hf.attr('name'), '');
+
+            return false;
+        }
+        function Entregar(codigo) {
+            var hf = $('#ContentPlaceHolder1_hfRealizarEntrega');
 
             hf.val(codigo);
             __doPostBack(hf.attr('name'), '');
@@ -220,6 +239,49 @@
             </div>
         </ContentTemplate>
     </asp:UpdatePanel>
-
+    <div class="modal fade" tabindex="-1" role="dialog" id="modalEntrega">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">Entregar Item</div>
+                <div class="modal-body">
+                    <asp:UpdatePanel runat="server" ID="upEntrega" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <ul class="list-group">
+                                <li class="list-group-item active">
+                                    <div class="row">
+                                        <div class="col-xs-1">Cod.</div>
+                                        <div class="col-xs-3">Nome</div>
+                                        <div class="col-xs-4">Item Solicitado</div>
+                                        <div class="col-xs-4">Telefone</div>
+                                    </div>
+                                </li>
+                            <asp:Repeater runat="server" ID="rptEntregaSolicitacao" OnItemDataBound="rptEntregaSolicitacao_ItemDataBound">
+                                <ItemTemplate>
+                                    <li class="list-group-item" runat="server" id="liSolicitacao" style="cursor: pointer;">
+                                        <div class="row">
+                                            <div class="col-xs-1"><%# Eval("Codigo") %></div>
+                                            <div class="col-xs-3"><%# Eval("NomeAluno") %></div>
+                                            <div class="col-xs-4"><%# Eval("NomeItem") %></div>
+                                            <div class="col-xs-4"><%# Eval("FoneAluno") %></div>
+                                        </div>
+                                    </li>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                                </ul>
+                        </ContentTemplate>
+                        <Triggers>
+                            <asp:AsyncPostBackTrigger ControlID="hfEntregarItem" EventName="ValueChanged" />
+                        </Triggers>
+                    </asp:UpdatePanel>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-remove"></span>
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </asp:Content>
 

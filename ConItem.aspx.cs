@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 public partial class ConItem : System.Web.UI.Page
@@ -81,8 +82,10 @@ public partial class ConItem : System.Web.UI.Page
             Item item = e.Item.DataItem as Item;
 
             LinkButton lbtDetalhar = e.Item.FindControl("lbtDetalhar") as LinkButton;
+            LinkButton lbtEntregar = e.Item.FindControl("lbtEntregar") as LinkButton;
 
             lbtDetalhar.Attributes.Add("onclick", "return DetalharItem('" + item.Codigo + "');");
+            lbtEntregar.Attributes.Add("onclick", "return EntregarItem('" + item.Codigo + "');");
 
             Image imgItem = e.Item.FindControl("imgItem") as Image;
 
@@ -109,6 +112,50 @@ public partial class ConItem : System.Web.UI.Page
             ExecScriptManager("$('#modalCadastro').modal('show');");
 
             hfDetalharItem.Value = "0";
+        }
+    }
+
+    protected void hfEntregarItem_ValueChanged(object sender, EventArgs e)
+    {
+        if(hfEntregarItem.Value != "0")
+        {
+            Session["_itemEntrega"] = hfEntregarItem.Value;
+
+            rptEntregaSolicitacao.DataSource = new Solicitacao().Listar("");
+            rptEntregaSolicitacao.DataBind();
+
+            ExecScriptManager("$('#modalEntrega').modal('show');");
+        }
+    }
+
+    protected void rptEntregaSolicitacao_ItemDataBound(object sender, RepeaterItemEventArgs e)
+    {
+        if(e.Item.ItemType == ListItemType.AlternatingItem || e.Item.ItemType == ListItemType.Item)
+        {
+            HtmlGenericControl liSolicitacao = e.Item.FindControl("liSolicitacao") as HtmlGenericControl;
+
+            Solicitacao solicitacao = e.Item.DataItem as Solicitacao;
+
+            liSolicitacao.Attributes.Add("onclick", "return Entregar('" + solicitacao.Codigo + "');");
+
+            if(e.Item.ItemIndex %2 != 0)
+            {
+                liSolicitacao.Style.Add("background-color", "#EEE");
+            }
+        }
+    }
+
+    protected void hfRealizarEntrega_ValueChanged(object sender, EventArgs e)
+    {
+        if(hfRealizarEntrega.Value != "0")
+        {
+            new Entrega().Inserir(Convert.ToInt32(Session["_itemEntrega"]), Convert.ToInt32(hfRealizarEntrega.Value), "", DateTime.Now, Session["Usuario"] as Usuario);
+
+            lbtBuscar_Click(sender, e);
+
+            ExecScriptManager("$('#modalEntrega').modal('hide');");
+
+            hfRealizarEntrega.Value = "0";
         }
     }
 }
